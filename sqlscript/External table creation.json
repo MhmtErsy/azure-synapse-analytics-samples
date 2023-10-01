@@ -1,0 +1,17 @@
+{
+	"name": "External table creation",
+	"properties": {
+		"content": {
+			"query": "-- 1\nCREATE MASTER KEY ENCRYPTION BY PASSWORD = 'xyz';\n\n-- 2\nCREATE DATABASE SCOPED CREDENTIAL SasToken\nWITH IDENTITY='SHARED ACCESS SIGNATURE'\n, SECRET='abc';\n\n-- 3\nCREATE EXTERNAL DATA SOURCE adventureworks\nWITH ( LOCATION='https://mydatalake007.blob.core.windows.net/adventureworks',\n       CREDENTIAL=SasToken);\n\n-- 4\nCREATE EXTERNAL FILE FORMAT ParquetFileFormatSnappy WITH(\n    FORMAT_TYPE=PARQUET,\n    DATA_COMPRESSION='org.apache.hadoop.io.compress.SnappyCodec'\n);\n\n-- 5\nCREATE EXTERNAL TABLE department (\n\tdepartmentid integer NULL,\n\tname VARCHAR(200) NULL,\n\tgroupname VARCHAR(200) NULL,\n\tmodifieddate datetime NULL\n)\nWITH (\n    LOCATION='/department/*.parquet',\n    DATA_SOURCE=adventureworks,\n    FILE_FORMAT=ParquetFileFormatSnappy\n);",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "adventureworksdb",
+				"poolName": "adventureworksdb"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
